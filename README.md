@@ -29,6 +29,7 @@
 
 🧩 1️⃣ Usuarios y Autenticación
 🟢 Registro de usuario
+```bash
 curl -X POST http://localhost:3000/auth/register \
   -H "Content-Type: application/json" \
   -d '{
@@ -36,7 +37,7 @@ curl -X POST http://localhost:3000/auth/register \
     "password": "123456",
     "name": "Usuario Prueba"
   }'
-
+```
 
 📤 Respuesta esperada:
 
@@ -48,13 +49,14 @@ curl -X POST http://localhost:3000/auth/register \
 }
 
 🔵 Login de usuario
+```bash
 curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
     "password": "123456"
   }'
-
+```
 
 📤 Respuesta esperada:
 
@@ -68,27 +70,32 @@ curl -X POST http://localhost:3000/auth/login \
 TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 🧭 Verificar token
+```bash
 curl -X GET http://localhost:3000/auth/profile \
   -H "Authorization: Bearer $TOKEN"
-
+```
 👥 2️⃣ Usuarios (solo admin)
 📋 Listar todos los usuarios
+```bash
 curl -X GET http://localhost:3000/users \
   -H "Authorization: Bearer $TOKEN"
-
+```
 
 🔒 Solo accesible si el token pertenece a un admin.
 
 🔍 Obtener un usuario por ID
+```bash
 curl -X GET http://localhost:3000/users/1 \
   -H "Authorization: Bearer $TOKEN"
-
+```
 🧾 Obtener un usuario con todos sus pedidos
+```bash
 curl -X GET http://localhost:3000/users/1/orders \
   -H "Authorization: Bearer $TOKEN"
-
+```
 🛒 3️⃣ Productos
 ➕ Crear un producto (admin)
+```bash
 curl -X POST http://localhost:3000/products \
   -H "Authorization: Bearer $TOKEN" \
   -F "name=Producto A" \
@@ -96,7 +103,7 @@ curl -X POST http://localhost:3000/products \
   -F "price=29.99" \
   -F "images=@/ruta/a/imagen1.jpg" \
   -F "images=@/ruta/a/imagen2.png"
-
+```
 
 📤 Respuesta esperada:
 
@@ -111,12 +118,15 @@ curl -X POST http://localhost:3000/products \
 }
 
 📋 Listar productos
+```bash
 curl -X GET http://localhost:3000/products
-
+```
 🔍 Obtener un producto por ID
+```bash
 curl -X GET http://localhost:3000/products/1
-
+```
 ✏️ Actualizar un producto (admin)
+```bash
 curl -X PATCH http://localhost:3000/products/1 \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
@@ -124,13 +134,15 @@ curl -X PATCH http://localhost:3000/products/1 \
     "name": "Producto A actualizado",
     "price": 39.99
   }'
-
+```
 🗑️ Eliminar un producto (admin)
+```bash
 curl -X DELETE http://localhost:3000/products/1 \
   -H "Authorization: Bearer $TOKEN"
-
+```
 📦 4️⃣ Pedidos
 🆕 Crear pedido
+```bash
 curl -X POST http://localhost:3000/orders \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
@@ -141,7 +153,7 @@ curl -X POST http://localhost:3000/orders \
     ]
   }'
 
-
+```
 📤 Respuesta esperada:
 
 {
@@ -154,24 +166,28 @@ curl -X POST http://localhost:3000/orders \
 }
 
 📋 Listar todos los pedidos del usuario logueado
+```bash
 curl -X GET http://localhost:3000/orders \
   -H "Authorization: Bearer $TOKEN"
-
+```
 🔍 Obtener pedido por ID (con líneas)
+```bash
 curl -X GET http://localhost:3000/orders/1 \
   -H "Authorization: Bearer $TOKEN"
-
+```
 🗑️ Eliminar pedido
+```bash
 curl -X DELETE http://localhost:3000/orders/1 \
   -H "Authorization: Bearer $TOKEN"
-
+```
 ⚙️ 5️⃣ Roles (solo admin)
 🔄 Actualizar rol de usuario
+```bash
 curl -X PATCH http://localhost:3000/users/2/role \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"role": "admin"}'
-
+```
 
 ## Project setup
 
