@@ -33,7 +33,7 @@
 curl -X POST http://localhost:3000/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "user@example.com",
+    "username": "user@example.com",
     "password": "123456",
     "name": "Usuario Prueba"
   }'
@@ -43,7 +43,7 @@ curl -X POST http://localhost:3000/auth/register \
 
 {
   "id": 1,
-  "email": "user@example.com",
+  "username": "user@example.com",
   "name": "Usuario Prueba",
   "role": "user"
 }
@@ -98,7 +98,7 @@ curl -X GET http://localhost:3000/users/1/orders \
 ```bash
 curl -X POST http://localhost:3000/products \
   -H "Authorization: Bearer $TOKEN" \
-  -F "name=Producto A" \
+  -F "title=Producto A" \
   -F "description=Un producto de prueba" \
   -F "price=29.99" \
   -F "images=@/ruta/a/imagen1.jpg" \
@@ -109,7 +109,7 @@ curl -X POST http://localhost:3000/products \
 
 {
   "id": 1,
-  "name": "Producto A",
+  "title": "Producto A",
   "price": 29.99,
   "images": [
     { "url": "uploads/imagen1.jpg" },
