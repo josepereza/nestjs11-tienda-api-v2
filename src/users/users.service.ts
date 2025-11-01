@@ -21,7 +21,10 @@ export class UsersService {
   }
 
   findOne(userId: number) {
-    return this.usersRepo.findOne({ where: { userId } });
+    return this.usersRepo.findOne({
+      where: { userId },
+      relations: ['orders', 'orders.lines'], // 👈 carga pedidos y líneas del pedido
+    });
   }
   findAll() {
     return this.usersRepo.find();
