@@ -20,6 +20,151 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## curl
+🧩 1️⃣ Usuarios y Autenticación
+🟢 Registro de usuario
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "123456",
+    "name": "Usuario Prueba"
+  }'
+
+
+📤 Respuesta esperada:
+
+{
+  "id": 1,
+  "email": "user@example.com",
+  "name": "Usuario Prueba",
+  "role": "user"
+}
+
+🔵 Login de usuario
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "123456"
+  }'
+
+
+📤 Respuesta esperada:
+
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR..."
+}
+
+
+💡 Guarda el token para usarlo en los siguientes endpoints:
+
+TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+🧭 Verificar token
+curl -X GET http://localhost:3000/auth/profile \
+  -H "Authorization: Bearer $TOKEN"
+
+👥 2️⃣ Usuarios (solo admin)
+📋 Listar todos los usuarios
+curl -X GET http://localhost:3000/users \
+  -H "Authorization: Bearer $TOKEN"
+
+
+🔒 Solo accesible si el token pertenece a un admin.
+
+🔍 Obtener un usuario por ID
+curl -X GET http://localhost:3000/users/1 \
+  -H "Authorization: Bearer $TOKEN"
+
+🧾 Obtener un usuario con todos sus pedidos
+curl -X GET http://localhost:3000/users/1/orders \
+  -H "Authorization: Bearer $TOKEN"
+
+🛒 3️⃣ Productos
+➕ Crear un producto (admin)
+curl -X POST http://localhost:3000/products \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "name=Producto A" \
+  -F "description=Un producto de prueba" \
+  -F "price=29.99" \
+  -F "images=@/ruta/a/imagen1.jpg" \
+  -F "images=@/ruta/a/imagen2.png"
+
+
+📤 Respuesta esperada:
+
+{
+  "id": 1,
+  "name": "Producto A",
+  "price": 29.99,
+  "images": [
+    { "url": "uploads/imagen1.jpg" },
+    { "url": "uploads/imagen2.png" }
+  ]
+}
+
+📋 Listar productos
+curl -X GET http://localhost:3000/products
+
+🔍 Obtener un producto por ID
+curl -X GET http://localhost:3000/products/1
+
+✏️ Actualizar un producto (admin)
+curl -X PATCH http://localhost:3000/products/1 \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Producto A actualizado",
+    "price": 39.99
+  }'
+
+🗑️ Eliminar un producto (admin)
+curl -X DELETE http://localhost:3000/products/1 \
+  -H "Authorization: Bearer $TOKEN"
+
+📦 4️⃣ Pedidos
+🆕 Crear pedido
+curl -X POST http://localhost:3000/orders \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "lines": [
+      { "productId": 1, "quantity": 2 },
+      { "productId": 2, "quantity": 1 }
+    ]
+  }'
+
+
+📤 Respuesta esperada:
+
+{
+  "id": 1,
+  "total": 89.97,
+  "lines": [
+    { "id": 1, "productId": 1, "quantity": 2, "price": 29.99 },
+    { "id": 2, "productId": 2, "quantity": 1, "price": 29.99 }
+  ]
+}
+
+📋 Listar todos los pedidos del usuario logueado
+curl -X GET http://localhost:3000/orders \
+  -H "Authorization: Bearer $TOKEN"
+
+🔍 Obtener pedido por ID (con líneas)
+curl -X GET http://localhost:3000/orders/1 \
+  -H "Authorization: Bearer $TOKEN"
+
+🗑️ Eliminar pedido
+curl -X DELETE http://localhost:3000/orders/1 \
+  -H "Authorization: Bearer $TOKEN"
+
+⚙️ 5️⃣ Roles (solo admin)
+🔄 Actualizar rol de usuario
+curl -X PATCH http://localhost:3000/users/2/role \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"role": "admin"}'
 
 ## Description
 
