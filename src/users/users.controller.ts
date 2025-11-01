@@ -54,20 +54,10 @@ export class UsersController {
   async findUserWithOrders(@Param('id') id: string) {
     const user = await this.usersService.findOne(+id);
     if (!user) throw new NotFoundException('Usuario no encontrado');
-
-    // Lazy load de pedidos
-    const orders = await user.orders;
-
-    // Cargar líneas (lazy) para cada pedido
-    const ordersWithLines = await Promise.all(
-      orders.map(async (o) => ({
-        ...o,
-        lines: await this.ordersService.getLines(o),
-      })),
-    );
-
-    return { ...user, orders: ordersWithLines };
+    return user; // 👈 ya incluye orders y lines
+    // return user.orders; // 👈 devuelve solo los pedidos
   }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
