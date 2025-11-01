@@ -20,7 +20,13 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-## curl
+
+## Description
+
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Endpoint
+
 🧩 1️⃣ Usuarios y Autenticación
 🟢 Registro de usuario
 curl -X POST http://localhost:3000/auth/register \
@@ -166,9 +172,6 @@ curl -X PATCH http://localhost:3000/users/2/role \
   -H "Content-Type: application/json" \
   -d '{"role": "admin"}'
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Project setup
 
