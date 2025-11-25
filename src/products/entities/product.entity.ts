@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { ProductImage } from './product-image.entity';
+import { OrderLine } from 'src/orders/entities/order-line.entity';
 
 @Entity()
 export class Product {
@@ -20,4 +21,6 @@ export class Product {
     cascade: true,
   })
   images: ProductImage[];
+  @OneToMany(() => OrderLine, (line) => line.product)
+  orderLines: OrderLine[];
 }

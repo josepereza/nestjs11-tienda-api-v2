@@ -23,7 +23,7 @@ export class OrderLine {
   price: number;
 
   // Relación con el producto (N líneas pueden apuntar al mismo producto)
-  @ManyToOne(() => Product, (product) => product.id)
+  @ManyToOne(() => Product, (product) => product.orderLines)
   product: Product;
 
   // Relación con el pedido padre

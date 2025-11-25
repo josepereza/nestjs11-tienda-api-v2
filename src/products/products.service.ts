@@ -2,20 +2,25 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { ProductImage } from './entities/product-image.entity';
-
+export interface ProductoMasVendido {
+  id: number;
+  title: string;
+  totalVendidos: number;
+}
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private productsRepo: Repository<Product>,
     @InjectRepository(ProductImage)
     private imagesRepo: Repository<ProductImage>,
+    private readonly dataSource: DataSource, // 👈 INYECTADO AQUÍ
   ) {}
 
   create(dto: CreateProductDto) {
-    console.log(dto)
+    console.log(dto);
     const p = this.productsRepo.create(dto);
     return this.productsRepo.save(p);
   }
@@ -45,5 +50,56 @@ export class ProductsService {
 
   remove(id: number) {
     return `This action removes a #${id} product`;
+  }
+  async getProductoMasVendidoDelMesSQL() {
+    const ahora = new Date();
+    const mes = ahora.getMonth() + 1;
+    const año = ahora.getFullYear();
+
+    const sql = `
+    SELECT 
+  p.id,
+  p.title,
+  SUM(ol.quantity) AS totalVendidos
+FROM order_lines ol
+INNER JOIN product p ON p.id = ol.productId
+INNER JOIN orders o ON o.id = ol.orderId
+WHERE MONTH(o.created_at) = ?
+  AND YEAR(o.created_at) = ?
+GROUP BY p.id
+ORDER BY totalVendidos DESC
+LIMIT 1;
+  `;
+
+    const resultado = await this.dataSource.query<ProductoMasVendido[]>(sql, [
+      mes,
+      año,
+    ]);
+
+    if (resultado.length === 0)
+      throw new NotFoundException('No hay ventas este mes');
+
+    return resultado[0];
+  }
+
+  async productoMasVendidoDelMes(): Promise<ProductoMasVendido | null> {
+    const ahora = new Date();
+    const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
+
+    const resultado = await this.dataSource
+      .getRepository(Product)
+      .createQueryBuilder('p')
+      .leftJoin('p.orderLines', 'ol')
+      .leftJoin('ol.order', 'o')
+      .select('p.id', 'id')
+      .addSelect('p.title', 'title')
+      .addSelect('SUM(ol.quantity)', 'totalVendidos')
+      .where('o.created_at >= :inicioMes', { inicioMes })
+      .groupBy('p.id')
+      .orderBy('totalVendidos', 'DESC')
+      .limit(1)
+      .getRawOne<ProductoMasVendido>();
+
+    return resultado ?? null;
   }
 }

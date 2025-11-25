@@ -25,7 +25,7 @@ export class ProductsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   create(@Body() dto: CreateProductDto) {
-    console.log('en controller', dto)
+    console.log('en controller', dto);
     return this.productsService.create(dto);
   }
 
@@ -68,5 +68,13 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
+  }
+  @Get('stats/producto-mas-vendido') //producto mas vendido del mes actual.
+  productoMasVendido() {
+    return this.productsService.getProductoMasVendidoDelMesSQL();
+  }
+  @Get('stats/mas-vendido')
+  async masVendido() {
+    return this.productsService.productoMasVendidoDelMes();
   }
 }
