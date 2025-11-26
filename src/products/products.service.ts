@@ -2,9 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { ProductImage } from './entities/product-image.entity';
+import { Size } from 'src/sizes/entities/size.entity';
 export interface ProductoMasVendido {
   id: number;
   title: string;
@@ -14,15 +15,47 @@ export interface ProductoMasVendido {
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private productsRepo: Repository<Product>,
+    @InjectRepository(Size) private sizesRepo: Repository<Size>,
+
     @InjectRepository(ProductImage)
     private imagesRepo: Repository<ProductImage>,
     private readonly dataSource: DataSource, // 👈 INYECTADO AQUÍ
   ) {}
 
-  create(dto: CreateProductDto) {
-    console.log(dto);
-    const p = this.productsRepo.create(dto);
-    return this.productsRepo.save(p);
+  async create(createProductDto: CreateProductDto) {
+    // Solución segura para sizes
+    const sizes: number[] = Array.isArray(createProductDto.sizes)
+      ? createProductDto.sizes
+      : [];
+
+    const { sizes: _, ...productDetails } = createProductDto;
+
+    console.log('✅ Tallas procesadas:', sizes);
+
+    // Buscar tallas existentes
+    let foundSizes: Size[] = [];
+    if (sizes.length > 0) {
+      foundSizes = await this.sizesRepo.find({
+        where: { id: In(sizes) }, // ← Ahora In está importado
+      });
+
+      // Validar que existen todas las tallas
+      if (foundSizes.length !== sizes.length) {
+        const foundIds = foundSizes.map((size) => size.id);
+        const missingIds = sizes.filter((id) => !foundIds.includes(id));
+        throw new NotFoundException(
+          `Tallas no encontradas: ${missingIds.join(', ')}`,
+        );
+      }
+    }
+
+    // Crear producto
+    const product = this.productsRepo.create({
+      ...productDetails,
+      sizes: foundSizes,
+    });
+
+    return await this.productsRepo.save(product);
   }
 
   findAll() {
