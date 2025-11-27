@@ -23,6 +23,12 @@ export class ProductsService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
+    /*  const { sizes = [], ...productDetails } = createProductDto;
+
+    const foundSizes = await this.sizeRepository.find({
+      where: { id: In(sizes) },
+    }); */
+
     // Solución segura para sizes
     const sizes: number[] = Array.isArray(createProductDto.sizes)
       ? createProductDto.sizes
@@ -39,6 +45,12 @@ export class ProductsService {
         where: { id: In(sizes) }, // ← Ahora In está importado
       });
 
+      //alternativa a In - con query builder
+      /*  foundSizes = await this.sizesRepo
+  .createQueryBuilder('size')
+  .where('size.id IN (:...ids)', { ids: sizes })
+  .getMany();  
+ */
       // Validar que existen todas las tallas
       if (foundSizes.length !== sizes.length) {
         const foundIds = foundSizes.map((size) => size.id);
