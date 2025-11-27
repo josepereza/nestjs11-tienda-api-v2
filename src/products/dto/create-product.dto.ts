@@ -6,6 +6,7 @@ import {
   IsOptional,
   Min,
 } from 'class-validator';
+import { ProductImage } from '../entities/product-image.entity';
 
 export class CreateProductDto {
   readonly title: string;
@@ -18,4 +19,7 @@ export class CreateProductDto {
   @Min(1, { each: true, message: 'Cada ID de talla debe ser mayor a 0' })
   @Type(() => Number) // Transforma cada elemento del array a number
   sizes?: number[];
+  @IsOptional()
+  @IsArray()
+  images?: ProductImage[];
 }

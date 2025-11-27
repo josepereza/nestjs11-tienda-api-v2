@@ -112,10 +112,40 @@ curl -X POST http://localhost:3000/products \
   "title": "Producto A",
   "price": 29.99,
   "images": [
-    { "url": "uploads/imagen1.jpg" },
-    { "url": "uploads/imagen2.png" }
+    { "path": "uploads/imagen1.jpg" },
+    { "path": "uploads/imagen2.png" }
   ]
 }
+➕ Crear un producto con tallas (admin)
+```
+curl -X POST http://localhost:3000/products \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Impvc2UyQGNvcnJlby5jb20iLCJzdWIiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY0MjMxNTkzLCJleHAiOjE3NjQyMzI2NTN9.CLbFXx27XVJfc6d-1HkZpUPAkYjZfiyMfP1ZWLa1pl4" \
+  -d '{
+    "title": "Zapatos Deportivos adidas",
+    "description": "Zapatos para running",
+    "price": 89.99,
+    "sizes": [2, 4]
+  }'
+```
+➕ Crear un producto con tallas y imagenes (admin)
+
+```
+
+curl -X POST http://localhost:3000/products \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Impvc2UyQGNvcnJlby5jb20iLCJzdWIiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY0MjM0MDY0LCJleHAiOjE3NjQyMzUxMjR9.RQVaHS3fTA-QcvLIOwZbNKOtxgilzaI3eKq7K77DUS0" \
+  -d '{
+    "title": "Zapatos Deportivos nike",
+    "description": "Zapatos para running",
+    "price": 35.99,
+    "sizes": [2, 4],
+    "images": [
+    { "path": "uploads/imagen1.jpg" },
+    { "path": "uploads/imagen2.png" }
+  ]
+  }'
+```
 
 📋 Listar productos
 ```bash

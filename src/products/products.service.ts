@@ -28,13 +28,14 @@ export class ProductsService {
     const foundSizes = await this.sizeRepository.find({
       where: { id: In(sizes) },
     }); */
+    //const { images = ProductImage[], ...productDetails } = createProductDto;
 
     // Solución segura para sizes
     const sizes: number[] = Array.isArray(createProductDto.sizes)
       ? createProductDto.sizes
       : [];
 
-    const { sizes: _, ...productDetails } = createProductDto;
+    const { sizes: _, images, ...productDetails } = createProductDto;
 
     console.log('✅ Tallas procesadas:', sizes);
 
@@ -62,9 +63,11 @@ export class ProductsService {
     }
 
     // Crear producto
+    console.log('estos son las imagenes', images);
     const product = this.productsRepo.create({
       ...productDetails,
       sizes: foundSizes,
+      images,
     });
 
     return await this.productsRepo.save(product);
